@@ -9,3 +9,14 @@ ML project classification of sounds
 7. Convert into MFCC
 8. Do splits 
 asdfasdfasdfas
+
+Initial setup 
+1. clone repo
+2. go to directory 
+3. install make 
+sudo apt-get install make
+4. setup venv
+python -m venv .
+https://docs.python.org/3/library/venv.html
+5. activate venv
+source bin/activate
