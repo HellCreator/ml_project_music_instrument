@@ -8,3 +8,4 @@ ML project classification of sounds
 6. agument data (if needed)
 7. Convert into MFCC
 8. Do splits 
+asdfasdfasdfas
