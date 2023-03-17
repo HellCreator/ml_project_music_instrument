@@ -20,3 +20,11 @@ python -m venv .
 https://docs.python.org/3/library/venv.html
 5. activate venv
 source bin/activate
+6. download dataset
+make download_dataset
+7. unpuck dataset
+python unpackdataset.py 
+
+Additionall commands
+clean dataset folder
+make clean_dataset
