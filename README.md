@@ -5,7 +5,7 @@ ML project classification of sounds
 3. unpack it (we can prepare make file for that)
 4. Analyse files according to task 2
 5. Normalize Data 
-6. agument data (if needed)
+6. augment data (if needed)
 7. Convert into MFCC
 8. Do splits 
 asdfasdfasdfas
@@ -22,9 +22,9 @@ https://docs.python.org/3/library/venv.html
 source bin/activate
 6. download dataset
 make download_dataset
-7. unpuck dataset
-python unpackdataset.py 
+7. unpack dataset
+python unpackdataset.py  (use 'python3' instead of 'python' if recently installed python or using latest version)
 
-Additionall commands
+Additional commands
 clean dataset folder
 make clean_dataset
