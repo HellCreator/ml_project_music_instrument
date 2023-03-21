@@ -7,8 +7,7 @@ ML project classification of sounds
 5. Normalize Data 
 6. augment data (if needed)
 7. Convert into MFCC
-8. Do splits 
-asdfasdfasdfas
+8. Do splits
 
 Initial setup 
 1. clone repo
