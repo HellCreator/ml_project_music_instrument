@@ -65,3 +65,6 @@ dataset/all-samples/saxophone_Fs3_15_fortissimo_normal.mp3: Invalid argument
 
 deleted file form dataset
 rm dataset/all-samples/saxophone_Fs3_15_fortissimo_normal.mp3
+
+[mp3 @ 0x142e34370] Failed to read frame size: Could not seek to 1026.
+dataset/all-samples/viola_D6_05_piano_arco-normal.mp3: Invalid argument
