@@ -1,22 +1,16 @@
-'''
-this script:
-convert files from mp3 to wav, 
-split it into 10s samples 
-convert into mfcc data using librosa
-'''
-'''
+import os
+import librosa
 from pydub import AudioSegment
 
-# files                                                                         
-src = "dataset/all-samples/banana shaker/bass drum"
-dst = "dataset/convertet_samples/test.wav"
 
-# convert wav to mp3                                                            
-sound = AudioSegment.from_mp3(src)
-sound.export(dst, format="wav")
-'''
-#########################
+for root_dir, cur_dir, files in os.walk(r'dataset/all-samples/'):
+    for file in files:
+        if str(file).endswith('.mp3'):
+            mp3_sound = AudioSegment.from_mp3(f"{root_dir}{file}")
+            mp3_sound.export(f"{root_dir}{file}.wav")
+            #y, sr = librosa.load(f"{root_dir}{file}.wav", sr=44100)
+        
+            #librosa.feature.mfcc(y=y, sr=sr)
 
-import os
-path = "dataset/all-samples"
-dir_list = os.listdir(path)
+
+
