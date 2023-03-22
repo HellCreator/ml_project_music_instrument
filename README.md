@@ -13,15 +13,16 @@ Initial setup
 1. clone repo
 2. go to directory 
 3. install make 
-sudo apt-get install make
+sudo apt-get install make ffmpeg
 4. setup venv
 python -m venv .
 https://docs.python.org/3/library/venv.html
 5. activate venv
 source bin/activate
-6. download dataset
+6. install dependencies
+7. download dataset
 make download_dataset
-7. unpack dataset
+8. unpack dataset
 python unpackdataset.py  (use 'python3' instead of 'python' if recently installed python or using latest version)
 
 Additional commands
