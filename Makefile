@@ -7,6 +7,9 @@ clean_dataset:
 	rm -rf ./dataset
 
 process_dataset:
+	# following files can not be converted so we delete them from dataset
+	rm dataset/all-samples/saxophone_Fs3_15_fortissimo_normal.mp3
+	rm dataset/all-samples/viola_D6_05_piano_arco-normal.mp3
 	python3 convertsample.py
 	python3 resampling.py
 	python3 mcff.py
