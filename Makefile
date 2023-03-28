@@ -5,3 +5,10 @@ download_dataset:
 
 clean_dataset:
 	rm -rf ./dataset
+
+process_dataset:
+	python3 convertsample.py
+	python3 resampling.py
+	python3 mcff.py
+
+reset_dataset: clean_dataset download_dataset process_dataset
