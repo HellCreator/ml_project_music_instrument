@@ -132,3 +132,5 @@ bin/
 dataset/
 pyvenv.cfg
 lib64
+
+share/
