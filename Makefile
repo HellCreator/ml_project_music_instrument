@@ -6,6 +6,9 @@ download_dataset:
 clean_dataset:
 	rm -rf ./dataset
 
+clean_chunks:
+	rm dataset/all-samples/*chunk_resampled.wav
+
 process_dataset:
 	# following files can not be converted so we delete them from dataset
 	rm dataset/all-samples/saxophone_Fs3_15_fortissimo_normal.mp3
