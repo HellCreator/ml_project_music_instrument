@@ -18,3 +18,12 @@ process_dataset:
 	python3 mcff.py
 
 reset_dataset: clean_dataset download_dataset process_dataset
+
+split_chunks:
+	rm -rf dataset/Split1
+	rm -rf dataset/Split2
+	rm -rf dataset/Split3
+	python3 analyzed_data2.py
+	python3 split1.py
+	python3 split2.py
+	python3 split3.py
