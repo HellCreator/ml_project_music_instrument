@@ -1,10 +1,7 @@
 import os
 import librosa
-import matplotlib.pyplot as plt
 import librosa.display
-import matplotlib
 import csv
-import sys
 
 
 with open('mcff_results_.csv', mode='w') as csv_file:
