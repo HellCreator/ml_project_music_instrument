@@ -24,6 +24,10 @@ source bin/activate
 make download_dataset
 8. unpack dataset
 python unpackdataset.py  (use 'python3' instead of 'python' if recently installed python or using latest version)
+9. Process dataset (resampling cut into chunks convert into mfcc spectrograms)
+make process_dataset
+10. split it into 3 datasets (will delete previous datasets)
+make split_chunks
 
 Additional commands
 clean dataset folder
