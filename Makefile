@@ -24,6 +24,4 @@ split_chunks:
 	rm -rf dataset/Split2
 	rm -rf dataset/Split3
 	python3 analyzedataset2.py
-	python3 split1.py
-	python3 split2.py
-	python3 split3.py
+	python3 split_files.py 5 20 20
