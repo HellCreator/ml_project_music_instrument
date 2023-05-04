@@ -1,5 +1,10 @@
 import sys
+import numpy as np
+import matplotlib as plt
+import librosa
+import wave
 from pydub import AudioSegment
+
 # Load files
 audio_segment = AudioSegment.from_file(sys.argv[1])
 # Print attributes
@@ -10,3 +15,5 @@ print(f"Frame width: {audio_segment.frame_width}")
 print(f"Length (ms): {len(audio_segment)}")
 print(f"Frame count: {audio_segment.frame_count()}")
 print(f"Intensity: {audio_segment.dBFS}")
+
+

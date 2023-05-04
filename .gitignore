@@ -134,3 +134,4 @@ pyvenv.cfg
 lib64
 
 share/
+.vscode/
