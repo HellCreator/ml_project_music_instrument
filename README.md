@@ -72,3 +72,11 @@ rm dataset/all-samples/saxophone_Fs3_15_fortissimo_normal.mp3
 
 [mp3 @ 0x142e34370] Failed to read frame size: Could not seek to 1026.
 dataset/all-samples/viola_D6_05_piano_arco-normal.mp3: Invalid argument
+
+Resources:
+https://matplotlib.org/3.1.1/gallery/subplots_axes_and_figures/figure_title.html
+https://stackoverflow.com/questions/67184563/is-it-possible-to-apply-sklearn-preprocessing-labelencoder-on-a-2d-list
+https://www.projectpro.io/recipes/generate-classification-report-and-confusion-matrix-in-python
+https://stackoverflow.com/questions/43051687/how-to-create-confusion-matrix-for-classification-in-tensorflow
+https://www.tensorflow.org/tutorials/audio/simple_audio
+https://stackoverflow.com/questions/43051687/how-to-create-confusion-matrix-for-classification-in-tensorflow
