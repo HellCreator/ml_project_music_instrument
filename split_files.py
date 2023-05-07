@@ -98,16 +98,23 @@ for instrument in instruments_dict.keys():
     if not os.path.exists(f'dataset/Split3/{instrument}'):
         os.makedirs(f"dataset/Split3/{instrument}")
         os.makedirs(f"dataset/Split3/{instrument}/train")
+        os.makedirs(f"dataset/Split3/{instrument}/val")
         os.makedirs(f"dataset/Split3/{instrument}/test")
     instrument_files = instruments_dict[instrument]['files']
     #random.shuffle(instrument_files)
     samples_count = min_sample_count
     for file in instrument_files[:int(samples_count*test_procent)]:
         shutil.copy2(file, f"dataset/Split3/{instrument}/test/{os.path.basename(file)}")
-    for file in instrument_files[int(samples_count*test_procent):min_sample_count]:
+    for file in instrument_files[int(samples_count*test_procent):int(samples_count*test_procent) + int(samples_count*val_procent)]:
+        shutil.copy2(file, f"dataset/Split3/{instrument}/val/{os.path.basename(file)}")
+    for file in instrument_files[int(samples_count*test_procent) + int(samples_count*val_procent):min_sample_count]:
         shutil.copy2(file, f"dataset/Split3/{instrument}/train/{os.path.basename(file)}")
+
+    for fname in os.listdir(f"dataset/Split3/{instrument}/val/"):
+        shutil.copy2(os.path.join(f"dataset/Split3/{instrument}/val/",fname), f"dataset/Split3/{instrument}/train/")
     print(f'SPLIT3 for label {instrument} '\
         f'test set {len(instrument_files[:int(samples_count*test_procent)])} '\
+        f'validation set {len(instrument_files[int(samples_count*test_procent):int(samples_count*test_procent) + int(samples_count*val_procent)])} '\
         f'train set {len(instrument_files[int(samples_count*test_procent):min_sample_count])} files'
     )
 

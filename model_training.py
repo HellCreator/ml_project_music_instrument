@@ -74,9 +74,38 @@ def define_model():
     model.compile(loss='categorical_crossentropy',metrics=['accuracy'],optimizer='adam')
     return model
 
+def generate_plots(history, name, test_X, test_y):
+    metrics = history.history
+    fig = plt.figure(figsize=(16,6))
+    plot1 = plt.subplot(1,2,1)
+    plot1.set_title(f'{name} Result')
+    plt.plot(history.epoch, metrics['loss'], metrics['val_loss'])
+    plt.legend(['loss', 'val_loss'])
+    plt.ylim([0, max(plt.ylim())])
+    plt.xlabel('Epoch')
+    plt.ylabel('Loss [CrossEntropy]')
+    plot2 = plt.subplot(1,2,2)
+    plot2.set_title(f'{name} Result')
+    plt.plot(history.epoch, 100*np.array(metrics['accuracy']), 100*np.array(metrics['val_accuracy']))
+    plt.legend(['accuracy', 'val_accuracy'])
+    plt.ylim([0, 100])
+    plt.xlabel('Epoch')
+    plt.ylabel('Accuracy [%]')
+    predict_x=model.predict(test_X)
+    y_pred = np.argmax(predict_x, axis=1)
+    class_data = np.argmax(test_y, axis=1)
+    confusion_mtx = confusion_matrix(class_data, y_pred)
+    plt.figure(figsize=(10, 8))
+    sns.heatmap(confusion_mtx,
+            xticklabels=label_names,
+            yticklabels=label_names,
+            annot=True, fmt='g')
+    plt.xlabel(f'Prediction {name}')
+    plt.ylabel('Label')
+
 model = define_model()
 print(model.summary())
-num_epochs = 50
+num_epochs = 70
 num_batch_size = 32
 
 val_X, val_y, train_X, train_y, test_X, test_y, label_names = get_data_from_files(r'dataset/Split1')
@@ -93,43 +122,10 @@ history = model.fit(
     verbose=1
 )
 
-duration = datetime.now() - start
-print("Training completed in time: ", duration)
-val_accuracy=model.evaluate(val_X, val_y,verbose=0)
-print(f'Validation accuracy {val_accuracy[1]}')
-test_accuracy=model.evaluate(test_X, test_y,verbose=0)
-print(f'Test accuracy {test_accuracy[1]}')
-
-metrics = history.history
-fig = plt.figure(figsize=(16,6))
-plot1 = plt.subplot(1,2,1)
-plot1.set_title('Split1 Result')
-plt.plot(history.epoch, metrics['loss'], metrics['val_loss'])
-plt.legend(['loss', 'val_loss'])
-plt.ylim([0, max(plt.ylim())])
-plt.xlabel('Epoch')
-plt.ylabel('Loss [CrossEntropy]')
-
-plot2 = plt.subplot(1,2,2)
-plot2.set_title('Split1 Result')
-plt.plot(history.epoch, 100*np.array(metrics['accuracy']), 100*np.array(metrics['val_accuracy']))
-plt.legend(['accuracy', 'val_accuracy'])
-plt.ylim([0, 100])
-plt.xlabel('Epoch')
-plt.ylabel('Accuracy [%]')
-
-predict_x=model.predict(test_X)
-y_pred = np.argmax(predict_x, axis=1)
-class_data = np.argmax(test_y, axis=1)
-confusion_mtx = confusion_matrix(class_data, y_pred)
-plt.figure(figsize=(10, 8))
-sns.heatmap(confusion_mtx,
-            xticklabels=label_names,
-            yticklabels=label_names,
-            annot=True, fmt='g')
-plt.xlabel('Prediction Split1')
-plt.ylabel('Label')
-
+duration1 = datetime.now() - start
+val_accuracy1 = model.evaluate(val_X, val_y,verbose=0)
+test_accuracy1=model.evaluate(test_X, test_y,verbose=0)
+generate_plots(history, 'Split1', test_X, test_y)
 # Split2
 model = define_model()
 print(model.summary())
@@ -147,42 +143,42 @@ history = model.fit(
     verbose=1
 )
 
-duration = datetime.now() - start
-print("Training completed in time: ", duration)
-val_accuracy=model.evaluate(val_X, val_y,verbose=0)
-print(f'Validation accuracy {val_accuracy[1]}')
-test_accuracy=model.evaluate(test_X, test_y,verbose=0)
-print(f'Test accuracy {test_accuracy[1]}')
-
-metrics = history.history
-fig = plt.figure(figsize=(16,6))
-plot1 = plt.subplot(1,2,1)
-plot1.set_title('Split2 Result')
-plt.plot(history.epoch, metrics['loss'], metrics['val_loss'])
-plt.legend(['loss', 'val_loss'])
-plt.ylim([0, max(plt.ylim())])
-plt.xlabel('Epoch')
-plt.ylabel('Loss [CrossEntropy]')
-
-plot2 = plt.subplot(1,2,2)
-plot2.set_title('Split2 Result')
-plt.plot(history.epoch, 100*np.array(metrics['accuracy']), 100*np.array(metrics['val_accuracy']))
-plt.legend(['accuracy', 'val_accuracy'])
-plt.ylim([0, 100])
-plt.xlabel('Epoch')
-plt.ylabel('Accuracy [%]')
-
-predict_x=model.predict(test_X)
-y_pred = np.argmax(predict_x, axis=1)
-class_data = np.argmax(test_y, axis=1)
-confusion_mtx = confusion_matrix(class_data, y_pred)
-plt.figure(figsize=(10, 8))
-sns.heatmap(confusion_mtx,
-            xticklabels=label_names,
-            yticklabels=label_names,
-            annot=True, fmt='g')
-plt.xlabel('Prediction Split2')
-plt.ylabel('Label')
+duration2 = datetime.now() - start
+val_accuracy2=model.evaluate(val_X, val_y,verbose=0)
+test_accuracy2=model.evaluate(test_X, test_y,verbose=0)
+generate_plots(history, 'Split2', test_X, test_y)
 # Split2 end
+
+model = define_model()
+print(model.summary())
+val_X, val_y, train_X, train_y, test_X, test_y, label_names = get_data_from_files(r'dataset/Split3')
+checkpointer = ModelCheckpoint(filepath='saved_models/audio_classification3.hdf5', verbose=1, save_best_only=True)
+start = datetime.now()
+
+history = model.fit(
+    train_X,
+    train_y,
+    batch_size=num_batch_size,
+    epochs=num_epochs,
+    validation_data=(val_X, val_y),
+    callbacks=[checkpointer],
+    verbose=1
+)
+duration3 = datetime.now() - start
+val_accuracy3 = model.evaluate(val_X, val_y,verbose=0)
+test_accuracy3=model.evaluate(test_X, test_y,verbose=0)
+
+print("SPLIT1 Training completed in time: ", duration1)
+print(f'SPLIT1 Validation accuracy {val_accuracy1[1]}')
+print(f'SPLIT1 Test accuracy {test_accuracy1[1]}')
+
+print("SPLIT2 Training completed in time: ", duration2)
+print(f'SPLIT2 Validation accuracy {val_accuracy2[1]}')
+print(f'SPLIT2 Test accuracy {test_accuracy2[1]}')
+
+print("SPLIT3 Training completed in time: ", duration3)
+print(f'SPLIT3 Validation accuracy {val_accuracy3[1]}')
+print(f'SPLIT3 Test accuracy {test_accuracy3[1]}')
+generate_plots(history, 'Split3', test_X, test_y)
 
 plt.show()
