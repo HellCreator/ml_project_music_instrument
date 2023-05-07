@@ -1,17 +1,20 @@
 #https://www.section.io/engineering-education/machine-learning-for-audio-classification/
 #https://colab.research.google.com/drive/1iLMmBnLazIhWBOpnsVfo7lVaQnB3WONv#scrollTo=C16LwhgY8JZ6
 import csv
+import os
+from datetime import datetime
 import pandas as pd
 import numpy as np
-from tensorflow.keras.utils import to_categorical
 from sklearn.preprocessing import LabelEncoder
-import os
+from tensorflow.keras.utils import to_categorical
 from tensorflow.keras.models import Sequential
-from tensorflow.keras.layers import Dense,Dropout,Activation,Flatten
-from tensorflow.keras.optimizers import Adam
-from sklearn import metrics
+from tensorflow.keras.layers import Dense, Dropout, Activation
 from tensorflow.keras.callbacks import ModelCheckpoint
-from datetime import datetime 
+from tensorflow.math import confusion_matrix
+from tensorflow import concat
+import matplotlib.pyplot as plt
+import seaborn as sns
+
 
 data_dict = dict()
 with open('mcff_results_.csv', mode='r') as csv_file:
@@ -79,22 +82,58 @@ model.add(Activation('softmax'))
 
 print(model.summary())
 model.compile(loss='categorical_crossentropy',metrics=['accuracy'],optimizer='adam')
-num_epochs = 200
+num_epochs = 10
 num_batch_size = 32
 
 checkpointer = ModelCheckpoint(filepath='saved_models/audio_classification.hdf5', verbose=1, save_best_only=True)
 start = datetime.now()
 
-model.fit(train_X, train_y, batch_size=num_batch_size, epochs=num_epochs, validation_data=(val_X, val_y), callbacks=[checkpointer], verbose=1)
+history = model.fit(
+    train_X,
+    train_y,
+    batch_size=num_batch_size,
+    epochs=num_epochs,
+    validation_data=(val_X, val_y),
+    callbacks=[checkpointer],
+    verbose=1
+)
 
 duration = datetime.now() - start
 print("Training completed in time: ", duration)
+val_accuracy=model.evaluate(val_X, val_y,verbose=0)
+print(f'Validation accuracy {val_accuracy[1]}')
+test_accuracy=model.evaluate(test_X, test_y,verbose=0)
+print(f'Test accuracy {test_accuracy[1]}')
 
-test_accuracy=model.evaluate(test_X,test_y,verbose=0)
-print(test_accuracy[1])
+metrics = history.history
+fig = plt.figure(figsize=(16,6))
+plot1 = plt.subplot(1,2,1)
+plot1.set_title('Split1 Result')
+plt.plot(history.epoch, metrics['loss'], metrics['val_loss'])
+plt.legend(['loss', 'val_loss'])
+plt.ylim([0, max(plt.ylim())])
+plt.xlabel('Epoch')
+plt.ylabel('Loss [CrossEntropy]')
 
-predict_x=model.predict(test_X) 
-classes_x=np.argmax(predict_x,axis=1)
+plot2 = plt.subplot(1,2,2)
+plot2.set_title('Split1 Result')
+plt.plot(history.epoch, 100*np.array(metrics['accuracy']), 100*np.array(metrics['val_accuracy']))
+plt.legend(['accuracy', 'val_accuracy'])
+plt.ylim([0, 100])
+plt.xlabel('Epoch')
+plt.ylabel('Accuracy [%]')
 
-print(predict_x)
-print(classes_x)
+predict_x=model.predict(test_X)
+y_pred = np.argmax(predict_x, axis=1)
+class_data = np.argmax(test_y, axis=1)
+confusion_mtx = confusion_matrix(class_data, y_pred)
+label_names = labelencoder.classes_
+plt.figure(figsize=(10, 8))
+sns.heatmap(confusion_mtx,
+            xticklabels=label_names,
+            yticklabels=label_names,
+            annot=True, fmt='g')
+plt.xlabel('Prediction Split1')
+plt.ylabel('Label')
+plt.show()
+å
