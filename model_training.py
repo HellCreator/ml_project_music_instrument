@@ -61,6 +61,7 @@ def define_model():
     model.add(Activation('relu'))
     model.add(Dropout(0.5))
     ###second layer
+    '''
     model.add(Dense(200))
     model.add(Activation('relu'))
     model.add(Dropout(0.5))
@@ -68,10 +69,17 @@ def define_model():
     model.add(Dense(100))
     model.add(Activation('relu'))
     model.add(Dropout(0.5))
+    '''
     ###final layer
     model.add(Dense(5))
     model.add(Activation('softmax'))
-    model.compile(loss='categorical_crossentropy',metrics=['accuracy'],optimizer='adam')
+    # optimizer='adam' # good
+    # optimizer='Nadam' # better
+    # optimizer='Adagrad' # very bad
+    # optimizer='Adamax' # good
+    # optimizer='RMSprop'# best but confusion matrix is bad
+    # optimizer='SGD' # do not work at all
+    model.compile(loss='categorical_crossentropy',metrics=['accuracy'],optimizer='Nadam')
     return model
 
 def generate_plots(history, name, test_X, test_y):
@@ -105,7 +113,7 @@ def generate_plots(history, name, test_X, test_y):
 
 model = define_model()
 print(model.summary())
-num_epochs = 70
+num_epochs = 15
 num_batch_size = 32
 
 val_X, val_y, train_X, train_y, test_X, test_y, label_names = get_data_from_files(r'dataset/Split1')
