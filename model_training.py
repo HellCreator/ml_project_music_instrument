@@ -14,6 +14,9 @@ from tensorflow.math import confusion_matrix
 import matplotlib.pyplot as plt
 import seaborn as sns
 
+num_epochs = 30
+num_batch_size = 32
+
 def get_data_from_files(path_to_split):
     train_set = list()
     with open(path_to_split + '/train.csv', mode='r') as csv_file:
@@ -59,7 +62,7 @@ def get_data_from_files(path_to_split):
     test_y=to_categorical(labelencoder.fit_transform(test_y))
     return val_X, val_y, train_X, train_y, test_X, test_y, labelencoder.classes_
 
-def define_model():
+def define_model(labels_count):
     model=Sequential()
     ###first layer
     model.add(Dense(200,input_shape=(128,)))
@@ -74,7 +77,7 @@ def define_model():
     model.add(Activation('relu'))
     model.add(Dropout(0.5))
     ###final layer
-    model.add(Dense(6))
+    model.add(Dense(labels_count))
     model.add(Activation('softmax'))
     # optimizer='adam' # good
     # optimizer='Nadam' # better
@@ -114,12 +117,10 @@ def generate_plots(history, name, test_X, test_y):
     plt.xlabel(f'Prediction {name}')
     plt.ylabel('Label')
 
-model = define_model()
-print(model.summary())
-num_epochs = 50
-num_batch_size = 32
 
 val_X, val_y, train_X, train_y, test_X, test_y, label_names = get_data_from_files(r'dataset/Split1')
+model = define_model(len(label_names))
+print(model.summary())
 checkpointer = ModelCheckpoint(filepath='saved_models/audio_classification.hdf5', verbose=1, save_best_only=True)
 start = datetime.now()
 
@@ -138,13 +139,13 @@ val_accuracy1 = model.evaluate(val_X, val_y,verbose=0)
 test_accuracy1=model.evaluate(test_X, test_y,verbose=0)
 generate_plots(history, 'Split1', test_X, test_y)
 # Split2
-model = define_model()
-print(model.summary())
 val_X, val_y, train_X, train_y, test_X, test_y, label_names = get_data_from_files(r'dataset/Split2')
+model1 = define_model(len(label_names))
+print(model1.summary())
 checkpointer = ModelCheckpoint(filepath='saved_models/audio_classification2.hdf5', verbose=1, save_best_only=True)
 start = datetime.now()
 
-history = model.fit(
+history1 = model1.fit(
     train_X,
     train_y,
     batch_size=num_batch_size,
@@ -155,18 +156,18 @@ history = model.fit(
 )
 
 duration2 = datetime.now() - start
-val_accuracy2=model.evaluate(val_X, val_y,verbose=0)
-test_accuracy2=model.evaluate(test_X, test_y,verbose=0)
-generate_plots(history, 'Split2', test_X, test_y)
+val_accuracy2=model1.evaluate(val_X, val_y,verbose=0)
+test_accuracy2=model1.evaluate(test_X, test_y,verbose=0)
+generate_plots(history1, 'Split2', test_X, test_y)
 # Split2 end
 
-model = define_model()
-print(model.summary())
 val_X, val_y, train_X, train_y, test_X, test_y, label_names = get_data_from_files(r'dataset/Split3')
+model2 = define_model(len(label_names))
+print(model2.summary())
 checkpointer = ModelCheckpoint(filepath='saved_models/audio_classification3.hdf5', verbose=1, save_best_only=True)
 start = datetime.now()
 
-history = model.fit(
+history2 = model2.fit(
     train_X,
     train_y,
     batch_size=num_batch_size,
@@ -176,8 +177,8 @@ history = model.fit(
     verbose=1
 )
 duration3 = datetime.now() - start
-val_accuracy3 = model.evaluate(val_X, val_y,verbose=0)
-test_accuracy3=model.evaluate(test_X, test_y,verbose=0)
+val_accuracy3 = model2.evaluate(val_X, val_y,verbose=0)
+test_accuracy3=model2.evaluate(test_X, test_y,verbose=0)
 
 print("SPLIT1 Training completed in time: ", duration1)
 print(f'SPLIT1 Validation accuracy {val_accuracy1[1]}')
@@ -190,6 +191,6 @@ print(f'SPLIT2 Test accuracy {test_accuracy2[1]}')
 print("SPLIT3 Training completed in time: ", duration3)
 print(f'SPLIT3 Validation accuracy {val_accuracy3[1]}')
 print(f'SPLIT3 Test accuracy {test_accuracy3[1]}')
-generate_plots(history, 'Split3', test_X, test_y)
+generate_plots(history2, 'Split3', test_X, test_y)
 
 plt.show()
