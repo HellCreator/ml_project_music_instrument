@@ -15,27 +15,32 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 
 def get_data_from_files(path_to_split):
-    data_dict = dict()
-    with open('mcff_results_.csv', mode='r') as csv_file:
+    train_set = list()
+    with open(path_to_split + '/train.csv', mode='r') as csv_file:
         reader=csv.reader(csv_file)
-        next(reader)
         for row in reader:
             features_list = list()
             for elem in row[0][1:-1].split(','):
                 features_list.append(float(elem))
-            data_dict[row[1]] = features_list
+            train_set.append([features_list, row[1]])
 
-    train_set = list()
     val_set = list()
+    with open(path_to_split + '/validate.csv', mode='r') as csv_file:
+        reader=csv.reader(csv_file)
+        for row in reader:
+            features_list = list()
+            for elem in row[0][1:-1].split(','):
+                features_list.append(float(elem))
+            val_set.append([features_list, row[1]])
+
     test_set = list()
-    for root_dir, cur_dir, files in os.walk(path_to_split):
-        for file in files:
-            if root_dir.endswith('val'):
-                val_set.append([data_dict[file], file.split('_')[0]])
-            if root_dir.endswith('train'):
-                train_set.append([data_dict[file], file.split('_')[0]])
-            if root_dir.endswith('test'):
-                test_set.append([data_dict[file], file.split('_')[0]])
+    with open(path_to_split + '/test.csv', mode='r') as csv_file:
+        reader=csv.reader(csv_file)
+        for row in reader:
+            features_list = list()
+            for elem in row[0][1:-1].split(','):
+                features_list.append(float(elem))
+            test_set.append([features_list, row[1]])
 
     val_set_df=pd.DataFrame(val_set, columns=['feature','class'])
     val_X=np.array(val_set_df['feature'].tolist())
@@ -57,21 +62,19 @@ def get_data_from_files(path_to_split):
 def define_model():
     model=Sequential()
     ###first layer
-    model.add(Dense(100,input_shape=(40,)))
+    model.add(Dense(200,input_shape=(128,)))
     model.add(Activation('relu'))
     model.add(Dropout(0.5))
     ###second layer
-    '''
-    model.add(Dense(200))
+    model.add(Dense(600))
     model.add(Activation('relu'))
     model.add(Dropout(0.5))
     ###third layer
-    model.add(Dense(100))
+    model.add(Dense(200))
     model.add(Activation('relu'))
     model.add(Dropout(0.5))
-    '''
     ###final layer
-    model.add(Dense(5))
+    model.add(Dense(6))
     model.add(Activation('softmax'))
     # optimizer='adam' # good
     # optimizer='Nadam' # better
@@ -113,7 +116,7 @@ def generate_plots(history, name, test_X, test_y):
 
 model = define_model()
 print(model.summary())
-num_epochs = 15
+num_epochs = 50
 num_batch_size = 32
 
 val_X, val_y, train_X, train_y, test_X, test_y, label_names = get_data_from_files(r'dataset/Split1')

@@ -11,7 +11,7 @@ with open('mcff_results_.csv', mode='w') as csv_file:
         for file in files:
             if str(file).endswith('chunk_resampled.wav'):
                 dt, sr = librosa.load(f"{root_dir}/{file}", sr=44100)
-                y = librosa.feature.mfcc(y=dt, sr=sr, n_mfcc=40)
+                y = librosa.feature.mfcc(y=dt, sr=sr, n_mfcc=128)
                 mfccs_scaled_features = np.mean(y.T,axis=0)
                 line_list = list()
                 line_list.append(list(mfccs_scaled_features))

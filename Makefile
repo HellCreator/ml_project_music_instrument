@@ -21,4 +21,8 @@ split_chunks:
 	rm -rf dataset/Split2
 	rm -rf dataset/Split3
 	python3 analyzedataset2.py
-	python3 split_files.py 5 20 20
+	python3 split.py 5 20 20
+
+train:
+	rm -rf saved_models
+	python3 model_training.py
