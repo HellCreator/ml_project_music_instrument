@@ -6,6 +6,7 @@ from datetime import datetime
 import pandas as pd
 import numpy as np
 from sklearn.preprocessing import LabelEncoder
+from sklearn.metrics import classification_report
 from tensorflow.keras.utils import to_categorical
 from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import Dense, Dropout, Activation
@@ -105,9 +106,10 @@ def generate_plots(history, name, test_X, test_y):
     plt.ylim([0, 100])
     plt.xlabel('Epoch')
     plt.ylabel('Accuracy [%]')
-    predict_x=model.predict(test_X)
+    predict_x=model.predict(test_X, batch_size=num_batch_size)
     y_pred = np.argmax(predict_x, axis=1)
     class_data = np.argmax(test_y, axis=1)
+    print(classification_report(y_pred, class_data))
     confusion_mtx = confusion_matrix(class_data, y_pred)
     plt.figure(figsize=(10, 8))
     sns.heatmap(confusion_mtx,
@@ -115,7 +117,31 @@ def generate_plots(history, name, test_X, test_y):
             yticklabels=label_names,
             annot=True, fmt='g')
     plt.xlabel(f'Prediction {name}')
-    plt.ylabel('Label')
+    plt.ylabel('Label Test dataset')
+    
+    predict_x=model.predict(val_X, batch_size=num_batch_size)
+    y_pred = np.argmax(predict_x, axis=1)
+    class_data = np.argmax(val_y, axis=1)
+    confusion_mtx = confusion_matrix(class_data, y_pred)
+    plt.figure(figsize=(10, 8))
+    sns.heatmap(confusion_mtx,
+            xticklabels=label_names,
+            yticklabels=label_names,
+            annot=True, fmt='g')
+    plt.xlabel(f'Prediction {name}')
+    plt.ylabel('Label Validation dataset')
+
+    predict_x=model.predict(train_X, batch_size=num_batch_size)
+    y_pred = np.argmax(predict_x, axis=1)
+    class_data = np.argmax(train_y, axis=1)
+    confusion_mtx = confusion_matrix(class_data, y_pred)
+    plt.figure(figsize=(10, 8))
+    sns.heatmap(confusion_mtx,
+            xticklabels=label_names,
+            yticklabels=label_names,
+            annot=True, fmt='g')
+    plt.xlabel(f'Prediction {name}')
+    plt.ylabel('Label Training dataset')
 
 
 val_X, val_y, train_X, train_y, test_X, test_y, label_names = get_data_from_files(r'dataset/Split1')
